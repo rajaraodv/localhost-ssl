@@ -8,13 +8,14 @@ var path = require('path');
 
 
 if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
-	console.log('\n-------------------------------------------------------------------------------------------------------------------');
-	console.log('ERROR. Self signed cert and key not found');
-	console.log('Follow the instructions from https://devcenter.heroku.com/articles/ssl-certificate-self to create server.key and server.crt files (see below for the summary of the steps) \n');
-	console.log('-------------------------------------------------------------------------------------------------------------------\n');
-	console.log('QUICK STEPS TO CREATE SELF SIGNED CERTS: \n(Copy paste the below commands one by one)\n');
+	console.log('\n--------------------------------------------');
+	console.log('ERROR. Self signed cert and key not found!\n');
+	console.log('FOLLOW QUICK STEPS BELOW TO CREATE SELF SIGNED CERTS:');
+	console.log('(Note: these instructions are from this Heroku article: https://devcenter.heroku.com/articles/ssl-certificate-self)');
 
-	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 \nStep 2. openssl rsa -passin pass:x -in server.pass.key -out server.key \nStep 3. rm server.pass.key \nStep 4. openssl req -new -key server.key -out server.csr \nStep 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt');
+	console.log('------------------------------------------------------------');
+	console.log('\n(Copy paste the below commands one by one)\n');
+	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 \nStep 2. openssl rsa -passin pass:x -in server.pass.key -out server.key \nStep 3. rm server.pass.key \nStep 4. openssl req -new -key server.key -out server.csr                  (<----- I typically hit enter and accept default values) \nStep 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt\n\n');
 
 	process.exit();
 }
@@ -22,9 +23,9 @@ if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
 var pathOfFolderToServe = process.argv[2];
 
 if (!pathOfFolderToServe) {
-	console.log('\n-------------------------------------------------------------------------------------------------------------------');
+	console.log('\n-------------------------------------------------------------');
 	console.log("\nError: Please enter path to the folder that needs to be served as the 1st parameter. \n\nRun it like this: node app.js <path-to-folder> ");
-	console.log('-------------------------------------------------------------------------------------------------------------------\n');
+	console.log('---------------------------------------------------------------\n');
 
 } else {
 
@@ -49,6 +50,7 @@ if (!pathOfFolderToServe) {
 	// Create an HTTPS service identical to the HTTP service.
 	https.createServer(options, app).listen(3000);
 
-	console.log('You can now access files in ' + pathOfFolderToServe + ' path at (SSL) https://localhost:3000/path-to-files');
-	console.log('Chrome will complain that this is insecure, but since this is your own machine you should be fine');
+	console.log('You can now access files in ' + pathOfFolderToServe + ' path at https://localhost:3000/');
+	console.log('\nExample: If the base folder you entered earlier is: "~/apps/myapp" and you want to access a file "~/apps/myapp/test.js", open: https://localhost:3000/test.js');
+	console.log('\nChrome will complain that this is insecure, but since this is your own machine you should be fine');
 }
