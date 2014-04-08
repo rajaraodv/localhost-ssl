@@ -15,7 +15,7 @@ if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
 
 	console.log('------------------------------------------------------------');
 	console.log('\n(Copy paste the below commands one by one)\n');
-	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 \nStep 2. openssl rsa -passin pass:x -in server.pass.key -out server.key \nStep 3. rm server.pass.key \nStep 4. openssl req -new -key server.key -out server.csr                  (<----- I typically hit enter and accept default values) \nStep 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt\n\n');
+	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 \nStep 2. openssl rsa -passin pass:x -in server.pass.key -out server.key \nStep 3. rm server.pass.key \nStep 4. openssl req -new -key server.key -out server.csr                  (<----- Hit Enter to accept default values or enter your own) \nStep 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt\n\n');
 
 	process.exit();
 }

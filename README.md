@@ -24,7 +24,7 @@ Usage:
 	Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 
 	Step 2. openssl rsa -passin pass:x -in server.pass.key -out server.key 
 	Step 3. rm server.pass.key 
-	Step 4. openssl req -new -key server.key -out server.csr                  (<----- I typically hit enter and accept default values except for password) 
+	Step 4. openssl req -new -key server.key -out server.csr                   (<----- Hit Enter to accept default values or enter your own)
 	Step 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
 	```
