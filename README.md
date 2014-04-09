@@ -1,6 +1,6 @@
-#A Simple Node.js based Self-signed SSL server.
+#A Simple Self-signed SSL server W/ Page Reload
 
-Usage: 
+##One Time Installation: 
 
 1. `sudo npm install localhost-ssl -g`
 2. Open folder of your choice and run `localhost-ssl` 
@@ -44,13 +44,29 @@ Usage:
 	```
 5. Open `https://locahost:3000` (Notice HTTPS)
 6. *** Chrome warning*** Google shows the below picture asking if you trust your own certificate.
+
+	![image](https://raw.githubusercontent.com/rajaraodv/localhost-ssl/master/chrome-warning.png)
+
 7. If you hit `Proceed anyway`, you see the all the files in your folder. 
 
+	![image](https://raw.githubusercontent.com/rajaraodv/localhost-ssl/master/files-being-served.png)
 
-# Live Reload Browser
-In addition to serving files in HTTPs, this server also monitors changes to files. If there is any change to any file, it automatically refreshes **1st tab of the 1st window** of Google Chrome browser. 
+Note: You will continue to see X mark, but that's simply because self signed cert is not signed by a well know authority like Verisign.
 
-### How To Use Live Reload For Development
+
+
+## Live Reload Browser
+In addition to serving files in HTTPS, this server also monitors changes to files. If there is any change to any file, it automatically refreshes **1st tab of the 1st window** of Google Chrome browser. 
+
+## Usage
+
+### Basic Usage
+(After installation, i.e step 7 is done..)
+
+1. Simply go to any folder of your choice and run `localhost-ssl` to server it in HTTPS in the browser.
+2. Open `https://localhost:3000` to see it content (See below to understand how to use it for development).
+
+### Usage: Regular Web Or Mobile App Development
 
 1. Imagine your web app is locally located at `~/path/to/my/app` and contains `index.html`. 
 2. Simply run `localhost-ssl` inside `~/path/to/my/app` folder. 
@@ -58,7 +74,7 @@ In addition to serving files in HTTPs, this server also monitors changes to file
 4. Now when you make changes to `JavaScript` or `css` or any file and save, you will see browser tab getting refreshed instantly!
 
 
-### How To Use Live Reload For Visualforce development
+### Usage: Visualforce development
 This is very handy when developing Visualforce pages that use frameworks like `AngularJS`, `Backbone`, `Ionic` etc. These are JavaScript heavy frameworks and usually 70-80% of your development time is spent in writing, fixing JavaScript and CSS. 
 
 
