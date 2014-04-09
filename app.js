@@ -9,7 +9,7 @@ var path = require('path');
 
 if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
 	console.log('\n--------------------------------------------');
-	console.log('ERROR. Self signed cert and key not found!\n');
+	console.log('Looks like you don\t have Self Signed Cert and key!\n');
 	console.log('FOLLOW QUICK STEPS BELOW TO CREATE SELF SIGNED CERTS:');
 	console.log('(Note: these instructions are from this Heroku article: https://devcenter.heroku.com/articles/ssl-certificate-self)');
 
@@ -22,6 +22,8 @@ if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
 
 var pathOfFolderToServe = process.argv[2];
 
+
+
 if (!pathOfFolderToServe) {
 	console.log('\n-------------------------------------------------------------');
 	console.log("\nError: Please enter path to the folder that needs to be served as the 1st parameter. \n\nRun it like this: node app.js <path-to-folder> ");
@@ -29,7 +31,12 @@ if (!pathOfFolderToServe) {
 
 } else {
 
+var watch = require('node-watch');
 
+watch(pathOfFolderToServe, function(filename) {
+  console.log(filename, ' changed!!');
+  runReloadChrome();
+});
 
 	// This line is from the Node.js HTTPS documentation.
 	var options = {
@@ -41,6 +48,7 @@ if (!pathOfFolderToServe) {
 	var app = express();
 
 	app.use(express.static(pathOfFolderToServe));
+	app.use(express.directory(pathOfFolderToServe));
 	app.use(express.favicon());
 	app.use(express.logger('dev'));
 	app.use(express.methodOverride());
@@ -50,7 +58,40 @@ if (!pathOfFolderToServe) {
 	// Create an HTTPS service identical to the HTTP service.
 	https.createServer(options, app).listen(3000);
 
+
 	console.log('You can now access files in ' + pathOfFolderToServe + ' path at https://localhost:3000/');
 	console.log('\nExample: If the base folder you entered earlier is: "~/apps/myapp" and you want to access a file "~/apps/myapp/test.js", open: https://localhost:3000/test.js');
-	console.log('\nChrome will complain that this is insecure, but since this is your own machine you should be fine');
+	console.log('\nChrome will complain that this is insecure, if you accept and proceed you will be able serve files');
 }
+
+//function that runs apple script
+var spawn = require('child_process').spawn;
+var runAppleScript = function (script, callback) {
+    var osa = spawn("osascript", ["-e", script]);
+    var out = "";
+    var err = "";
+    osa.stdout.on('data', function (data) {
+        out += data;
+    });
+    osa.stderr.on('data', function (data) {
+        err += data;
+    });
+    osa.on('exit', function (code) {
+        // Ignore stdout (which shows the return value of the AppleScript code)
+        if (err.length > 0) {
+            console.log("STDERR: "+err);
+        }
+        if (callback) {
+            callback();
+        }
+    });
+};
+var chromeAppName = "Google Chrome";
+
+//apple script to refresh chrome
+var runReloadChrome = runAppleScript.bind(null, '\
+    tell application "'+chromeAppName+'"\n\
+    tell first tab of first window to reload\n\
+    end tell\n\
+    ');
+

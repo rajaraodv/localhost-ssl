@@ -1,10 +1,10 @@
 {
   "name": "localhost-ssl",
   "version": "0.0.0",
-  "description": "simple nodejs ssl server",
+  "description": "Serve localhost files in (self-signed) SSL. Also Reload browser tab when the file changes(Run your app in first tab)",
   "dependencies": {
     "express": "*",
-    "commander": "*"
+    "underscore": "*"
   },
   "main": "app.js",
   "scripts": {
@@ -16,5 +16,13 @@
     "express"
   ],
   "author": "Raja Rao DV",
-  "license": "MIT"
+  "license": "MIT",
+  "preferGlobal": "true",
+  "bin": {
+    "localhost-ssl": "./app.js"
+  },
+  "repository": {
+   "type": "git",
+   "url": "https://github.com/rajaraodv/localhost-ssl.git"
+ }
 }
