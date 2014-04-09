@@ -1,10 +1,11 @@
 {
   "name": "localhost-ssl",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Serve localhost files in (self-signed) SSL. Also Reload browser tab when the file changes(Run your app in first tab)",
   "dependencies": {
     "express": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "node-watch": "*"
   },
   "main": "app.js",
   "scripts": {

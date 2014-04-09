@@ -6,21 +6,32 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 
+//serve files from 2nd argument or current working directory of the
+var pathOfFolderToServe = process.cwd(); 
 
-if (!fs.existsSync('server.key') || !fs.existsSync('server.crt')) {
-	console.log('\n--------------------------------------------');
-	console.log('Looks like you don\t have Self Signed Cert and key!\n');
+var serverKey = __dirname + '/server.key';
+var serverCert = __dirname + '/server.crt';
+
+if (!fs.existsSync(serverKey) || !fs.existsSync(serverCert)) {
+	console.log('\n-----------------------------------------------------------');
+	console.log('Looks like you don\'t have Self Signed Cert and key!\n');
 	console.log('FOLLOW QUICK STEPS BELOW TO CREATE SELF SIGNED CERTS:');
-	console.log('(Note: these instructions are from this Heroku article: https://devcenter.heroku.com/articles/ssl-certificate-self)');
+	console.log('(Note: these instructions are from the Heroku article: https://devcenter.heroku.com/articles/ssl-certificate-self)');
 
 	console.log('------------------------------------------------------------');
 	console.log('\n(Copy paste the below commands one by one)\n');
-	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 \nStep 2. openssl rsa -passin pass:x -in server.pass.key -out server.key \nStep 3. rm server.pass.key \nStep 4. openssl req -new -key server.key -out server.csr                  (<----- Hit Enter to accept default values or enter your own) \nStep 5. openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt\n\n');
+	console.log('Step 1. openssl genrsa -des3 -passout pass:x -out '+__dirname+'/server.pass.key 2048 \n');
+	console.log('Step 2. openssl rsa -passin pass:x -in '+__dirname+'/server.pass.key -out '+__dirname+'/server.key \n');
+	console.log('Step 3. rm '+__dirname+'/server.pass.key \n');
+	console.log('Step 4. openssl req -new -key '+__dirname+'/server.key -out '+__dirname+'/server.csr                  (<----- Hit Enter to accept default values or enter your own) \n');
+	console.log('Step 5. openssl x509 -req -days 365 -in '+__dirname+'/server.csr -signkey '+__dirname+'/server.key -out '+__dirname+'/server.crt\n\n');
+
+	console.log('\nNote: If you get "permission denied" error, you may need to append "sudo" before each command.\n\n');
 
 	process.exit();
 }
 
-var pathOfFolderToServe = process.argv[2];
+
 
 
 
@@ -38,10 +49,15 @@ watch(pathOfFolderToServe, function(filename) {
   runReloadChrome();
 });
 
+process.addListener("uncaughtException", function (err) {
+   console.log('\n\nError: Too many files to monitor. Please narrow down to a subfolder with fewer files\nExiting.\n\n');
+    process.exit();
+});
+
 	// This line is from the Node.js HTTPS documentation.
 	var options = {
-		key: fs.readFileSync('server.key'),
-		cert: fs.readFileSync('server.crt')
+		key: fs.readFileSync(serverKey),
+		cert: fs.readFileSync(serverCert)
 	};
 
 	// Create a service (the app object is just a callback).
@@ -49,8 +65,8 @@ watch(pathOfFolderToServe, function(filename) {
 
 	app.use(express.static(pathOfFolderToServe));
 	app.use(express.directory(pathOfFolderToServe));
-	app.use(express.favicon());
-	app.use(express.logger('dev'));
+
+
 	app.use(express.methodOverride());
 
 	// Create an HTTP service.
@@ -59,9 +75,8 @@ watch(pathOfFolderToServe, function(filename) {
 	https.createServer(options, app).listen(3000);
 
 
-	console.log('You can now access files in ' + pathOfFolderToServe + ' path at https://localhost:3000/');
-	console.log('\nExample: If the base folder you entered earlier is: "~/apps/myapp" and you want to access a file "~/apps/myapp/test.js", open: https://localhost:3000/test.js');
-	console.log('\nChrome will complain that this is insecure, if you accept and proceed you will be able serve files');
+	console.log('1. Serving files in ' + pathOfFolderToServe + ' folder at https://localhost:3000/');
+	console.log('2. "Live Reload Browser": Simply run your app in the "1st tab of the 1st window" of Google Chrome browser to see it refresh when a file is changed.');
 }
 
 //function that runs apple script
