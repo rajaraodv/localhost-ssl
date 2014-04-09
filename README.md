@@ -1,4 +1,12 @@
 ##A Simple Self-signed SSL server W/ Page Reload
+This is a simple Node.js based https file server to serve localhost files in HTTPS. It comes with all the steps to install self-signed certificates (from [this Heroku article](https://devcenter.heroku.com/articles/ssl-certificate-self)). It also monitors for file changes and refreshes Chrome browser tab.
+
+##Use Case
+This can be very handy when you are developing for HTTPS clouds like Salesforce. 
+
+For example if your index.html (or Visualforce page) file is running in Salesforce Development Org., you can ask it to load JS files from https://localhost:3000/myapp.js so you can develop locally and upload it to that server when you are finally done. 
+
+Better yet, while you are developing, it will reload browser tab to speed up the development that much more. It's not **just about auto-refreshing the browser**, but since the files are loaded locally it's actually instantaneous. 
 
 ##One Time Installation: 
 
